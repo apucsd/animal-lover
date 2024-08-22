@@ -1,13 +1,25 @@
 "use client";
+
 import AnimalCard from "@/components/ui/AnimalCard";
 import SkeletonCard from "@/components/ui/ScaletonCard";
-import { useGetAllAnimalQuery } from "@/redux/api/categoryApi";
+import { useGetAnimalByCategoryQuery } from "@/redux/api/categoryApi";
 
-const HomePage = () => {
-  const { data, isLoading } = useGetAllAnimalQuery({});
+const CategoryPage = ({
+  params,
+}: {
+  params: {
+    categoryId: string;
+  };
+}) => {
+  const category = params.categoryId;
+
+  const { data, isLoading } = useGetAnimalByCategoryQuery({ category });
+  // console.log(data);
+
   return (
-    <div className="">
+    <div className="text-white">
       <div className="grid grid-cols-2 md:grid-cols-6 my-10 justify-center items-center gap-3 w-full">
+        {data?.length <= 0 && <p>No Animal Found!!!</p>}
         {isLoading
           ? [1, 2, 3, 4, 5, 6].map((item) => <SkeletonCard key={item} />)
           : data?.map((animal: any) => (
@@ -18,4 +30,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default CategoryPage;
